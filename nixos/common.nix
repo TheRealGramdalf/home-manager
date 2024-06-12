@@ -31,8 +31,10 @@ let
           submoduleSupport.enable = true;
           submoduleSupport.externalPackageInstall = cfg.useUserPackages;
 
-          home.username = config.users.users.${name}.name;
-          home.homeDirectory = config.users.users.${name}.home;
+          home = (mkIf cfg.useSystemUsers {
+            username = config.users.users.${name}.name;
+            homeDirectory = config.users.users.${name}.home;
+          });
 
           # Make activation script use same version of Nix as system as a whole.
           # This avoids problems with Nix not being in PATH.
@@ -52,6 +54,12 @@ in {
       using the system configuration's `pkgs`
       argument in Home Manager. This disables the Home Manager
       options {option}`nixpkgs.*`'';
+    
+    useSystemUsers = mkEnableOption ''
+      using the system configuration's `users.users`
+      argument in Home Manager. This disables some assertions
+      which would cause a build failiure if {option}`users.users.<name>`
+      is unset.'' // {default = true;};
 
     backupFileExtension = mkOption {
       type = types.nullOr types.str;
