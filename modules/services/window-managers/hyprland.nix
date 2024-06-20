@@ -40,7 +40,19 @@ in {
   ];
 
   options.wayland.windowManager.hyprland = {
-    enable = lib.mkEnableOption "Hyprland wayland compositor";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable configuration for Hyprland, a tiling wayland compositor that doesn't sacrifice on it's looks.
+
+        ::: {.note}
+        This module only configures Hyprland; it does not install it. 
+        NixOS users should enable the NixOS module with {option}`programs.hyprland.enable`,
+        which installs Hyprland and makes other system-level changes, such as adding a desktop session entry.
+        :::
+      '';
+    };
 
     package = lib.mkPackageOption pkgs "hyprland" { };
 
